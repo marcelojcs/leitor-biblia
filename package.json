@@ -19,7 +19,8 @@
   "dependencies": {
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
-    "promise-polyfill": "^6.0.2"
+    "promise-polyfill": "^6.0.2",
+    "reset.css": "^2.0.2"
   },
   "devDependencies": {
     "poi": "^9.0.0",

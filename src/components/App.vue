@@ -1,81 +1,140 @@
 <template>
   <div id="app">
-    <div class="banner">
-      <img
-        src="https://vuejs.org/images/logo.png"
-        width="100"
-        alt="vue"
-        class="logo"
-      />
-      <h1>Welcome to Vue.js</h1>
+    <div id="header">
+      <h1>Biblia</h1>
     </div>
+    <div v-if="book==null">
+      <Books :bbl=bbl @clkd='loadBook' />
+    </div>
+    <div v-else-if="chapter==null">
+      <Chapters :book=book @event="loadChapter"/>
+      <button class="goBack" v-on:click="goBack(0)">VOLTAR</button>
+    </div>
+    <div v-else>
+      <Main :chapter=chapter :name=cName />
+      <div class="holder">
+          <button v-on:click='copyContent'>COPIAR</button>
+      </div>
+      <button class="goBack" v-on:click="goBack(1)">VOLTAR</button>
+    </div>
+
+    
     <div class="bottom">
-      To get started, edit <code>./src/components/App.vue</code> and save to reload.<br/>
-      <span class="fade">
-        Checkout <code>./README.md</code> for more usages.
-      </span>
+      by MarceloJCS
     </div>
   </div>
 </template>
 
 <script>
+  import json from '../data/data.json';
+  import Books from './Books';
+  import Chapters from './Chapters';
+  import Main from './Main';
   export default {
-    name: 'app'
+    name: 'app',
+    components:{
+      Books,
+      Chapters,
+      Main,
+    },
+    methods:{
+      loadBook(bk){
+          this.book=bk;
+          window.scrollTo(0,0);
+
+      },
+      loadChapter(cpt){
+        this.chapter=cpt[0];
+        this.cName=cpt[1];
+        window.scrollTo(0,0);
+
+      },
+      goBack(id){
+        switch(id){
+          case 0 :
+            this.book=null;
+            break;
+            case 1:
+              this.chapter=null;
+              break
+        }
+        window.scrollTo(0,0)
+
+      },
+      copyContent(){
+          const range = document.createRange();
+          range.selectNode(document.querySelector('#main'));
+          window.getSelection().removeAllRanges()
+          window.getSelection().addRange(range);
+          document.execCommand("Copy");
+          window.getSelection().removeAllRanges()
+      }
+    } ,
+    data(){
+      return{
+        bbl:json,
+        book:null,
+        chapter:null,
+        cName:'',
+      }
+    }
   }
+
 </script>
 
 <!-- CSS libraries -->
-<style src="normalize.css/normalize.css"></style>
+<style src="reset.css/reset.css"></style>
 
 <!-- Global CSS -->
 <style>
-  code {
-    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-    font-size: 0.9em;
-    white-space: pre-wrap;
-    color: #2c3e50;
-  }
+h1{
+	background: #333333;
+	color:#fff;
+	padding:10px;
+	font-size:10vw;
+	font-weight: bold!important;
+	
+}
 
-  code::before, code::after {
-    content: '`';
-  }
-</style>
+.bTtl{
+	width:100vw;
+	text-align: left;
+	background: none;
+	margin: 10px 0 0 0;
+	border:solid 1px #888; 
+	border-top:none;
+	border-left:none;
+	font-size: 6vw
+}
 
-<!-- Scoped component css -->
-<!-- It only affect current component -->
-<style scoped>
-  #app {
-    text-align: center;
-  }
+.bottom{
+	font-size: 3vw;
+	color:#ffffff;
+	background:#333333;
+	padding:5px
+}
 
-  #app h1 {
-    color: #2c3e50;
-    font-weight: 300;
-    margin: 0;
-  }
+.goBack{
+	background:#333;
+	border:none;
+	padding: 10px;
+	font-weight:bold;
+	color : #fff;
+	margin:10px;
+	font-size:5.7vw
+}
 
-  .banner {
-    height: 200px;
-    background-color: #f6f6f6;
-    padding: 50px 10px;
-  }
+.holder{
+	text-align:center;
+	margin: 10px;
 
-  .bottom {
-    padding: 80px 10px;
-    font-size: 24px;
-    font-weight: 300;
-  }
-
-  .fade {
-    font-size: 14px;
-  }
-
-  .logo {
-    animation: spin 4s 1s infinite linear
-  }
-
-  @keyframes spin {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
-  }
+}
+.holder button{
+	display:inline-block;
+	background:#383;
+	color:#ffff;
+	font-size:6vw;
+	padding:10px;
+	border:none;
+}
 </style>
